@@ -5,7 +5,6 @@ import { MDXRemote, MDXRemoteSerializeResult } from 'next-mdx-remote';
 import { serialize } from 'next-mdx-remote/serialize';
 import remarkGfm from 'remark-gfm';
 import rehypeSlug from 'rehype-slug';
-import Footer from '@/components/Footer';
 import { getAllRoleSlugs, getRoleBySlug, type RoleMeta } from '@/lib/resume';
 
 type Props = {
@@ -54,7 +53,7 @@ export default function RolePage({ meta, mdx }: Props) {
           <MDXRemote {...mdx} />
         </article>
       </main>
-      <Footer />
+      
     </>
   );
 }

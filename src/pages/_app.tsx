@@ -5,6 +5,7 @@ import '@/styles/globals.css';
 import '@radix-ui/themes/styles.css';
 import { Theme } from '@radix-ui/themes';
 import { Urbanist } from 'next/font/google';
+import Footer from '@/components/Footer';
 
 const urbanist = Urbanist({ subsets: ['latin'], variable: '--font-urbanist', display: 'swap' });
 
@@ -24,6 +25,8 @@ export default function App({ Component, pageProps }: AppProps) {
             <Component {...pageProps} />
           </motion.div>
         </AnimatePresence>
+        {/* Keep footer outside animated container so it stays fixed */}
+        <Footer />
       </Theme>
     </div>
   );

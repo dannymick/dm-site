@@ -1,6 +1,5 @@
 import Head from 'next/head';
 import Link from 'next/link';
-import Footer from '@/components/Footer';
 import Logo from '@/components/Logo';
 import { loadResume, type RoleMeta, type EducationMeta } from '@/lib/resume';
 
@@ -77,7 +76,7 @@ export default function Home({ roles, education }: Props) {
           ))}
         </div>
       </main>
-      <Footer />
+      
     </>
   );
 }
