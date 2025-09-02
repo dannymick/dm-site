@@ -36,13 +36,11 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Build
+      - name: Build (static export)
         run: pnpm build
 
-      - name: Export static site
-        run: |
-          pnpm export
-          touch out/.nojekyll
+      - name: Add .nojekyll
+        run: touch out/.nojekyll
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
