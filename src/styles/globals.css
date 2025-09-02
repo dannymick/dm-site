@@ -1,0 +1,31 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Base typography and layout tweaks */
+html, body, #__next {
+  height: 100%;
+}
+
+body {
+  /* Default to dark theme */
+  @apply bg-neutral-950 text-neutral-100 antialiased;
+}
+
+.container-responsive { @apply max-w-4xl mx-auto px-4 sm:px-6 lg:px-8; }
+
+/* MDX content defaults: preserve bullets and spacing */
+.mdx-content ul { @apply list-disc pl-6; }
+.mdx-content ol { @apply list-decimal pl-6; }
+.mdx-content li { @apply my-1; }
+.mdx-content p { @apply leading-relaxed; }
+.mdx-content h3 { @apply text-xl font-semibold mt-4; }
+.mdx-content a { @apply underline underline-offset-4; }
+
+/* MDX images: responsive and dark-friendly */
+.mdx-content img {
+  @apply max-w-full h-auto rounded-md ring-1 ring-inset ring-neutral-800 shadow-sm my-4;
+}
+
+/* Keep space for fixed footer */
+body { @apply pb-24; }
