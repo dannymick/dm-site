@@ -27,7 +27,6 @@ export default function Home({ roles, education }: Props) {
       </Head>
       <main className="container-responsive py-12">
         <h1 className="text-3xl sm:text-4xl font-semibold tracking-tight">Danny Mickleburgh</h1>
-        <p>Engineer, Designer</p>
 
         <h2 className="mt-10 text-2xl font-semibold tracking-tight">Experience</h2>
         <div className="mt-4">
