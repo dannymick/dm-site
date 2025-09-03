@@ -29,3 +29,8 @@ body {
 
 /* Keep space for fixed footer */
 body { @apply pb-24; }
+
+/* Override Radix Themes default font to Urbanist */
+.rt-Theme {
+  --default-font-family: var(--font-urbanist), ui-sans-serif, system-ui, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
+}

@@ -1,8 +1,8 @@
 import type { AppProps } from 'next/app';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useRouter } from 'next/router';
-import '@/styles/globals.css';
 import '@radix-ui/themes/styles.css';
+import '@/styles/globals.css';
 import { Theme } from '@radix-ui/themes';
 import { Urbanist } from 'next/font/google';
 import Footer from '@/components/Footer';
@@ -26,7 +26,14 @@ export default function App({ Component, pageProps }: AppProps) {
         gtag('js', new Date());
         gtag('config', '${process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID || 'G-788FE357V4'}');
       `}</Script>
-      <Theme appearance="dark" accentColor="violet" grayColor="mauve" radius="large" scaling="95%">
+      <Theme
+        className={urbanist.className}
+        appearance="dark"
+        accentColor="violet"
+        grayColor="mauve"
+        radius="large"
+        scaling="95%"
+      >
         <AnimatePresence mode="wait" initial={false}>
           <motion.div
             key={router.asPath}
