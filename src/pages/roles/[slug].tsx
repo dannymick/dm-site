@@ -1,5 +1,6 @@
 import Head from 'next/head';
 import Link from 'next/link';
+import { ArrowLeftIcon } from '@radix-ui/react-icons';
 import { GetStaticPaths, GetStaticProps } from 'next';
 import { MDXRemote, MDXRemoteSerializeResult } from 'next-mdx-remote';
 import { serialize } from 'next-mdx-remote/serialize';
@@ -41,7 +42,10 @@ export default function RolePage({ meta, mdx }: Props) {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </Head>
       <main className="container-responsive py-12">
-        <Link href="/" className="text-sm text-neutral-400 hover:text-neutral-200">← Back</Link>
+        <Link href="/" className="inline-flex items-center gap-1 text-sm text-neutral-400 hover:text-neutral-200">
+          <ArrowLeftIcon className="h-4 w-4" aria-hidden="true" />
+          <span>Back</span>
+        </Link>
         <h1 className="mt-2 text-2xl sm:text-3xl font-semibold tracking-tight text-neutral-100">
           {meta.company}
           <span className="mx-2 text-neutral-500">•</span>

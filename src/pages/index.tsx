@@ -1,5 +1,6 @@
 import Head from 'next/head';
 import Link from 'next/link';
+import { ArrowRightIcon } from '@radix-ui/react-icons';
 import Logo from '@/components/Logo';
 import { loadResume, type RoleMeta, type EducationMeta } from '@/lib/resume';
 
@@ -46,7 +47,10 @@ export default function Home({ roles, education }: Props) {
                   </div>
                   <div className="sm:hidden text-sm text-neutral-500 mt-0.5">{r.start} – {r.end}</div>
                 </div>
-                <div className="hidden sm:block text-sm text-neutral-500 group-hover:text-neutral-300">{yearsOf(r)} →</div>
+                <div className="hidden sm:flex items-center gap-1 text-sm text-neutral-500 group-hover:text-neutral-300">
+                  <span>{yearsOf(r)}</span>
+                  <ArrowRightIcon className="h-4 w-4" aria-hidden="true" />
+                </div>
               </div>
             </Link>
           ))}
