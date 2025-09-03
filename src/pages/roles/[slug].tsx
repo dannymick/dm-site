@@ -49,7 +49,7 @@ export default function RolePage({ meta, mdx }: Props) {
         </h1>
         <p className="mt-1 text-neutral-400">{meta.start} – {meta.end}</p>
 
-        <article className="mdx-content max-w-none mt-6">
+        <article className="mdx-content max-w-none mt-6 mb-10">
           <MDXRemote {...mdx} />
         </article>
       </main>
