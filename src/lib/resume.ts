@@ -58,7 +58,10 @@ export function loadResume(): ResumeData {
     const afterSkills = raw.slice(skillsIndex);
     const stopSkills = afterSkills.indexOf('\n## ', 1);
     const skillsBody = stopSkills === -1 ? afterSkills : afterSkills.slice(0, stopSkills);
-    skills = skillsBody.split('\n').slice(1).join('\n').trim();
+    const skillLines = skillsBody.split('\n');
+    const headingIdx = skillLines.findIndex((line) => line.trim().toLowerCase().startsWith('## skills'));
+    const contentStart = headingIdx === -1 ? 0 : headingIdx + 1;
+    skills = skillLines.slice(contentStart).join('\n').trim();
   }
 
   // Parse Projects section (new)
