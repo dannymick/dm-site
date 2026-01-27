@@ -7,6 +7,7 @@ import { serialize } from 'next-mdx-remote/serialize';
 import remarkGfm from 'remark-gfm';
 import rehypeSlug from 'rehype-slug';
 import { getAllRoleSlugs, getRoleBySlug, type RoleMeta } from '@/lib/resume';
+import MdxImage from '@/components/MdxImage';
 
 type Props = {
   meta: RoleMeta;
@@ -54,7 +55,13 @@ export default function RolePage({ meta, mdx }: Props) {
         <p className="mt-1 text-neutral-400">{meta.start} – {meta.end}</p>
 
         <article className="mdx-content max-w-none mt-6 mb-10">
-          <MDXRemote {...mdx} />
+          <MDXRemote
+            {...mdx}
+            // Map markdown <img> to our placeholder/stable-ratio component
+            components={{
+              img: (props) => <MdxImage {...(props as any)} />,
+            }}
+          />
         </article>
       </main>
       

@@ -27,6 +27,11 @@ body {
   @apply max-w-full h-auto rounded-md ring-1 ring-inset ring-neutral-800 shadow-sm my-4;
 }
 
+/* When using the custom MDX image wrapper, avoid double rings/shadows on inner img */
+.mdx-content .mdx-image img {
+  @apply ring-0 shadow-none rounded-none my-0;
+}
+
 /* Keep space for fixed footer */
 body { @apply pb-24; }
 
