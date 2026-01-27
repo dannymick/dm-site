@@ -30,6 +30,7 @@ export type ResumeData = {
   projects: ProjectMeta[];
   education: EducationMeta[];
   sectionsBySlug: Record<string, string>; // MDX content per role or project (body only)
+  skills: string; // raw MDX for the Skills section
 };
 
 const RESUME_PATH = path.join(process.cwd(), 'Resume.mdx');
@@ -49,6 +50,16 @@ function stripParens(input: string): string {
 export function loadResume(): ResumeData {
   const raw = fs.readFileSync(RESUME_PATH, 'utf8');
   const sectionsBySlug: Record<string, string> = {};
+  let skills = '';
+
+  // Parse Skills section (can appear anywhere)
+  const skillsIndex = raw.search(/\n## Skills\b|^## Skills\b/);
+  if (skillsIndex !== -1) {
+    const afterSkills = raw.slice(skillsIndex);
+    const stopSkills = afterSkills.indexOf('\n## ', 1);
+    const skillsBody = stopSkills === -1 ? afterSkills : afterSkills.slice(0, stopSkills);
+    skills = skillsBody.split('\n').slice(1).join('\n').trim();
+  }
 
   // Parse Projects section (new)
   const projects: ProjectMeta[] = [];
@@ -204,7 +215,7 @@ export function loadResume(): ResumeData {
     e.logo = resolveLogo(bases);
   }
 
-  return { roles, projects, education, sectionsBySlug };
+  return { roles, projects, education, sectionsBySlug, skills };
 }
 
 export function getAllRoleSlugs(): string[] {

@@ -1,14 +1,24 @@
 import Head from 'next/head';
 import Link from 'next/link';
 import { ArrowRightIcon } from '@radix-ui/react-icons';
+import { MDXRemote, MDXRemoteSerializeResult } from 'next-mdx-remote';
+import { serialize } from 'next-mdx-remote/serialize';
+import remarkGfm from 'remark-gfm';
+import rehypeSlug from 'rehype-slug';
 import Logo from '@/components/Logo';
 import { loadResume, type RoleMeta, type EducationMeta, type ProjectMeta } from '@/lib/resume';
 
-type Props = { roles: RoleMeta[]; projects: ProjectMeta[]; education: EducationMeta[] };
+type Props = { roles: RoleMeta[]; projects: ProjectMeta[]; education: EducationMeta[]; skills: MDXRemoteSerializeResult };
 
 export async function getStaticProps() {
-  const { roles, projects, education } = loadResume();
-  return { props: { roles, projects, education } };
+  const { roles, projects, education, skills } = loadResume();
+  const skillsMdx = await serialize(skills || '', {
+    mdxOptions: {
+      remarkPlugins: [remarkGfm],
+      rehypePlugins: [rehypeSlug],
+    },
+  });
+  return { props: { roles, projects, education, skills: skillsMdx } };
 }
 
 function yearsOf({ start, end }: { start: string; end: string }) {
@@ -18,7 +28,7 @@ function yearsOf({ start, end }: { start: string; end: string }) {
   return a && b ? `${a}-${b}` : a || b || '';
 }
 
-export default function Home({ roles, projects, education }: Props) {
+export default function Home({ roles, projects, education, skills }: Props) {
   return (
     <>
       <Head>
@@ -27,6 +37,11 @@ export default function Home({ roles, projects, education }: Props) {
       </Head>
       <main className="container-responsive py-12">
         <h1 className="text-3xl sm:text-4xl font-semibold tracking-tight">Danny Mickleburgh</h1>
+
+        <h2 className="mt-10 text-2xl font-semibold tracking-tight">Skills</h2>
+        <article className="mdx-content max-w-none mt-4">
+          <MDXRemote {...skills} />
+        </article>
 
         <h2 className="mt-10 text-2xl font-semibold tracking-tight">Projects</h2>
         <div className="mt-4">
