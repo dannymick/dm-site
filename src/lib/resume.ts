@@ -10,6 +10,12 @@ export type RoleMeta = {
   logo?: string | null;
 };
 
+export type ProjectMeta = {
+  slug: string;
+  name: string;
+  subtitle?: string | null;
+};
+
 export type EducationMeta = {
   slug: string;
   school: string;
@@ -21,8 +27,9 @@ export type EducationMeta = {
 
 export type ResumeData = {
   roles: RoleMeta[];
+  projects: ProjectMeta[];
   education: EducationMeta[];
-  sectionsBySlug: Record<string, string>; // MDX content per role (body only)
+  sectionsBySlug: Record<string, string>; // MDX content per role or project (body only)
 };
 
 const RESUME_PATH = path.join(process.cwd(), 'Resume.mdx');
@@ -41,22 +48,48 @@ function stripParens(input: string): string {
 
 export function loadResume(): ResumeData {
   const raw = fs.readFileSync(RESUME_PATH, 'utf8');
+  const sectionsBySlug: Record<string, string> = {};
+
+  // Parse Projects section (new)
+  const projects: ProjectMeta[] = [];
+  const projectIndex = raw.search(/\n## Projects\b|^## Projects\b/);
+  if (projectIndex !== -1) {
+    const afterProjects = raw.slice(projectIndex);
+    const stopProjects = afterProjects.indexOf('\n## ', 1);
+    const projectBody = stopProjects === -1 ? afterProjects : afterProjects.slice(0, stopProjects);
+    const projectBlocks = projectBody
+      .split(/\n(?=###\s+)/g)
+      .filter((b) => b.trim().startsWith('###'));
+
+    for (const block of projectBlocks) {
+      const lines = block.trim().split(/\n/);
+      const heading = lines[0];
+      // Pattern: ### Name — Subtitle (subtitle optional, accepts -, –, —)
+      const headingMatch = heading.match(/^###\s+(.+?)(?:\s+[–—-]\s+(.+))?\s*$/);
+      if (!headingMatch) continue;
+      const name = headingMatch[1].trim();
+      const subtitle = headingMatch[2]?.trim() ?? null;
+      const slug = slugify(name);
+      const body = lines.slice(1).join('\n').trim();
+
+      projects.push({ slug, name, subtitle });
+      sectionsBySlug[slug] = body.length ? body : '';
+    }
+  }
 
   // Find the Experience section
   const expIndex = raw.indexOf('\n## Experience');
-  if (expIndex === -1) {
-    return { roles: [], education: [], sectionsBySlug: {} };
-  }
-  const afterExp = raw.slice(expIndex);
+  const afterExp = expIndex === -1 ? '' : raw.slice(expIndex);
 
   // Split into role sections starting with level-3 headings until next level-2
-  const stopIndex = afterExp.indexOf('\n## ', 1);
-  const expBody = stopIndex === -1 ? afterExp : afterExp.slice(0, stopIndex);
+  const stopIndex = afterExp ? afterExp.indexOf('\n## ', 1) : -1;
+  const expBody = afterExp ? (stopIndex === -1 ? afterExp : afterExp.slice(0, stopIndex)) : '';
 
-  const roleBlocks = expBody.split(/\n(?=###\s+)/g).filter((b) => b.trim().startsWith('###'));
+  const roleBlocks = expBody
+    ? expBody.split(/\n(?=###\s+)/g).filter((b) => b.trim().startsWith('###'))
+    : [];
 
   const roles: RoleMeta[] = [];
-  const sectionsBySlug: Record<string, string> = {};
 
   for (const block of roleBlocks) {
     const lines = block.trim().split(/\n/);
@@ -171,7 +204,7 @@ export function loadResume(): ResumeData {
     e.logo = resolveLogo(bases);
   }
 
-  return { roles, education, sectionsBySlug };
+  return { roles, projects, education, sectionsBySlug };
 }
 
 export function getAllRoleSlugs(): string[] {
