@@ -219,3 +219,16 @@ export function getRoleBySlug(slug: string): { meta: RoleMeta; mdx: string } | n
   const section = sectionsBySlug[slug] ?? '';
   return { meta, mdx: section };
 }
+
+export function getAllProjectSlugs(): string[] {
+  const { projects } = loadResume();
+  return projects.map((p) => p.slug);
+}
+
+export function getProjectBySlug(slug: string): { meta: ProjectMeta; mdx: string } | null {
+  const { projects, sectionsBySlug } = loadResume();
+  const meta = projects.find((p) => p.slug === slug);
+  if (!meta) return null;
+  const section = sectionsBySlug[slug] ?? '';
+  return { meta, mdx: section };
+}

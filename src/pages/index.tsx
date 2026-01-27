@@ -2,13 +2,13 @@ import Head from 'next/head';
 import Link from 'next/link';
 import { ArrowRightIcon } from '@radix-ui/react-icons';
 import Logo from '@/components/Logo';
-import { loadResume, type RoleMeta, type EducationMeta } from '@/lib/resume';
+import { loadResume, type RoleMeta, type EducationMeta, type ProjectMeta } from '@/lib/resume';
 
-type Props = { roles: RoleMeta[]; education: EducationMeta[] };
+type Props = { roles: RoleMeta[]; projects: ProjectMeta[]; education: EducationMeta[] };
 
 export async function getStaticProps() {
-  const { roles, education } = loadResume();
-  return { props: { roles, education } };
+  const { roles, projects, education } = loadResume();
+  return { props: { roles, projects, education } };
 }
 
 function yearsOf({ start, end }: { start: string; end: string }) {
@@ -18,7 +18,7 @@ function yearsOf({ start, end }: { start: string; end: string }) {
   return a && b ? `${a}-${b}` : a || b || '';
 }
 
-export default function Home({ roles, education }: Props) {
+export default function Home({ roles, projects, education }: Props) {
   return (
     <>
       <Head>
@@ -27,6 +27,25 @@ export default function Home({ roles, education }: Props) {
       </Head>
       <main className="container-responsive py-12">
         <h1 className="text-3xl sm:text-4xl font-semibold tracking-tight">Danny Mickleburgh</h1>
+
+        <h2 className="mt-10 text-2xl font-semibold tracking-tight">Projects</h2>
+        <div className="mt-4">
+          {projects.map((p) => (
+            <Link key={p.slug} href={`/projects/${p.slug}`} className="group block">
+              <div className="grid grid-cols-[1fr_auto] items-center gap-3 px-2 sm:px-0 py-4 border-b border-neutral-800 last:border-b-0 transition-colors group-hover:bg-neutral-900/40 rounded-none">
+                <div>
+                  <div className="text-lg font-medium text-neutral-100">{p.name}</div>
+                  {p.subtitle ? (
+                    <div className="text-sm text-neutral-500 mt-0.5">{p.subtitle}</div>
+                  ) : null}
+                </div>
+                <div className="hidden sm:flex items-center gap-1 text-sm text-neutral-500 group-hover:text-neutral-300">
+                  <ArrowRightIcon className="h-4 w-4" aria-hidden="true" />
+                </div>
+              </div>
+            </Link>
+          ))}
+        </div>
 
         <h2 className="mt-10 text-2xl font-semibold tracking-tight">Experience</h2>
         <div className="mt-4">
