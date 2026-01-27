@@ -38,11 +38,6 @@ export default function Home({ roles, projects, education, skills }: Props) {
       <main className="container-responsive py-12">
         <h1 className="text-3xl sm:text-4xl font-semibold tracking-tight">Danny Mickleburgh</h1>
 
-        <h2 className="mt-10 text-2xl font-semibold tracking-tight">Skills</h2>
-        <article className="mdx-content max-w-none mt-4">
-          <MDXRemote {...skills} />
-        </article>
-
         <h2 className="mt-10 text-2xl font-semibold tracking-tight">Projects</h2>
         <div className="mt-4">
           {projects.map((p) => (
@@ -113,6 +108,11 @@ export default function Home({ roles, projects, education, skills }: Props) {
             </div>
           ))}
         </div>
+
+        <h2 className="mt-10 text-2xl font-semibold tracking-tight">Skills</h2>
+        <article className="mdx-content max-w-none mt-4">
+          <MDXRemote {...skills} />
+        </article>
       </main>
       
     </>
