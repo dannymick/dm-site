@@ -108,11 +108,6 @@ export default function Home({ roles, projects, education, skills }: Props) {
             </div>
           ))}
         </div>
-
-        <h2 className="mt-10 text-2xl font-semibold tracking-tight">Skills</h2>
-        <article className="mdx-content max-w-none mt-4 mb-12 flex flex-col">
-          <MDXRemote {...skills} />
-        </article>
       </main>
     </>
   );
