@@ -114,7 +114,6 @@ export default function Home({ roles, projects, education, skills }: Props) {
           <MDXRemote {...skills} />
         </article>
       </main>
-      
     </>
   );
 }
