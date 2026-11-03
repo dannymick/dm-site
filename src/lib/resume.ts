@@ -16,19 +16,9 @@ export type ProjectMeta = {
   subtitle?: string | null;
 };
 
-export type EducationMeta = {
-  slug: string;
-  school: string;
-  degree: string;
-  start: string;
-  end: string;
-  logo?: string | null;
-};
-
 export type ResumeData = {
   roles: RoleMeta[];
   projects: ProjectMeta[];
-  education: EducationMeta[];
   sectionsBySlug: Record<string, string>; // MDX content per role or project (body only)
   skills: string; // raw MDX for the Skills section
 };
@@ -132,41 +122,6 @@ export function loadResume(): ResumeData {
     sectionsBySlug[slug] = body.length ? body : '';
   }
 
-  // Logos will be attached later using a unified resolver for roles and education
-
-  // Parse Education section
-  const eduIndex = raw.indexOf('\n## Education');
-  const education: EducationMeta[] = [];
-  if (eduIndex !== -1) {
-    const afterEdu = raw.slice(eduIndex);
-    const stopEdu = afterEdu.indexOf('\n## ', 1);
-    const eduBody = stopEdu === -1 ? afterEdu : afterEdu.slice(0, stopEdu);
-    const eduBlocks = eduBody.split(/\n(?=###\s+)/g).filter((b) => b.trim().startsWith('###'));
-
-    for (const block of eduBlocks) {
-      const lines = block.trim().split(/\n/);
-      const heading = lines[0];
-      // Pattern: ### School, Location
-      const headingMatch = heading.match(/^###\s+(.+?)\s*$/);
-      if (!headingMatch) continue;
-      const schoolLoc = headingMatch[1].trim();
-      const school = schoolLoc.split(',')[0].trim();
-
-      const dateLine = (lines.slice(1).find((l) => l.trim().startsWith('*')) || '').trim();
-      const dateMatch = dateLine.match(/^\*(.+?)\s+–\s+(.+?)\*/);
-      const start = dateMatch ? dateMatch[1].trim() : '';
-      const end = dateMatch ? dateMatch[2].trim() : '';
-
-      const dateLineIndex = lines.findIndex((l) => l === dateLine);
-      const bodyStart = dateLineIndex >= 0 ? dateLineIndex + 1 : 1;
-      const body = lines.slice(bodyStart).join('\n').trim();
-      const degree = body.split(/\n/).filter(Boolean)[0] || '';
-
-      const slug = slugify(school);
-      education.push({ slug, school, degree, start, end });
-    }
-  }
-
   // Attach logo path if a matching file exists in public/logos or public root
   const logosDir = path.join(process.cwd(), 'public', 'logos');
   const publicDir = path.join(process.cwd(), 'public');
@@ -212,13 +167,7 @@ export function loadResume(): ResumeData {
     r.logo = resolveLogo(bases);
   }
 
-  for (const e of education) {
-    const altSlug = slugify(stripParens(e.school));
-    const bases = [e.slug, altSlug, acronym(e.school)];
-    e.logo = resolveLogo(bases);
-  }
-
-  return { roles, projects, education, sectionsBySlug, skills };
+  return { roles, projects, sectionsBySlug, skills };
 }
 
 export function getAllRoleSlugs(): string[] {

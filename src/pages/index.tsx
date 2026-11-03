@@ -6,19 +6,19 @@ import { serialize } from 'next-mdx-remote/serialize';
 import remarkGfm from 'remark-gfm';
 import rehypeSlug from 'rehype-slug';
 import Logo from '@/components/Logo';
-import { loadResume, type RoleMeta, type EducationMeta, type ProjectMeta } from '@/lib/resume';
+import { loadResume, type RoleMeta, type ProjectMeta } from '@/lib/resume';
 
-type Props = { roles: RoleMeta[]; projects: ProjectMeta[]; education: EducationMeta[]; skills: MDXRemoteSerializeResult };
+type Props = { roles: RoleMeta[]; projects: ProjectMeta[]; skills: MDXRemoteSerializeResult };
 
 export async function getStaticProps() {
-  const { roles, projects, education, skills } = loadResume();
+  const { roles, projects, skills } = loadResume();
   const skillsMdx = await serialize(skills || '', {
     mdxOptions: {
       remarkPlugins: [remarkGfm],
       rehypePlugins: [rehypeSlug],
     },
   });
-  return { props: { roles, projects, education, skills: skillsMdx } };
+  return { props: { roles, projects, skills: skillsMdx } };
 }
 
 function yearsOf({ start, end }: { start: string; end: string }) {
@@ -28,7 +28,7 @@ function yearsOf({ start, end }: { start: string; end: string }) {
   return a && b ? `${a}-${b}` : a || b || '';
 }
 
-export default function Home({ roles, projects, education, skills }: Props) {
+export default function Home({ roles, projects, skills }: Props) {
   return (
     <>
       <Head>
@@ -82,30 +82,6 @@ export default function Home({ roles, projects, education, skills }: Props) {
                 </div>
               </div>
             </Link>
-          ))}
-        </div>
-
-        <h2 className="mt-10 text-2xl font-semibold tracking-tight">Education</h2>
-        <div className="mt-4">
-          {education.map((e) => (
-            <div key={e.slug} className="grid grid-cols-[auto_1fr] items-start gap-3 py-4 border-b border-neutral-800 last:border-b-0">
-              <div className="pt-0.5">
-                <Logo slug={e.slug} label={e.school} src={e.logo ?? undefined} />
-              </div>
-              <div>
-                <div className="text-lg font-medium text-neutral-100">{e.school}</div>
-                <div className="sm:hidden text-sm text-neutral-500 mt-0.5">
-                  <span className="text-neutral-300">{e.degree}</span>
-                  <span className="mx-2 text-neutral-600">•</span>
-                  {e.start} – {e.end}
-                </div>
-                <div className="hidden sm:flex items-center gap-2 text-sm text-neutral-500 mt-0.5">
-                  <span className="text-neutral-300">{e.degree}</span>
-                  <span className="text-neutral-600">•</span>
-                  <span>{e.start} – {e.end}</span>
-                </div>
-              </div>
-            </div>
           ))}
         </div>
       </main>
